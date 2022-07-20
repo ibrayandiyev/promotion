@@ -1,0 +1,333 @@
+{% extends 'base_admin.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block content %}
+<link href="{% static 'css/app.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap/bootstrap-select.min.css' %}" rel="stylesheet">
+<script src="{% static 'js/bootstrap/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'js/ckeditor/ckeditor.js' %}"></script>
+<script src="{% static 'js/vanilla-picker.min.js' %}"></script>
+
+<style>
+	.form-group{
+		margin-bottom: 15px;
+	}
+</style>
+<div class="block-header row m-0 pb-2">
+	<h2>{% blocktrans %}Add New Product{% endblocktrans %}</h2>
+</div>
+<div class="row clearfix">
+	<div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
+		<div class="card">
+			<div class="card-body">
+				<form method="POST" enctype='multipart/form-data' id="formulario" >
+					{% csrf_token %}
+					<div class="clearfix m-b-20">
+						<div class="row form-group">
+							<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Photo{% endblocktrans %} 1</label>
+								{% if product.picture1 %}
+									<a class="img-clear" href="javascript:void(0);" data-id="1"><span ><i class="fas fa-trash-alt"></i></span></a>
+								{% endif %}
+								<div class="product-img-div" id="prod_img1">
+								    <img id="product_img1" src="{% if product.picture1 %}{{ product.picture1.url }}{% endif %}" alt="">
+							    </div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Photo{% endblocktrans %} 2</label>
+								{% if product.picture2 %}
+									<a class="img-clear" href="javascript:void(0);" data-id="2"><span ><i class="fas fa-trash-alt"></i></span></a>
+								{% endif %}
+								<div class="product-img-div" id="prod_img2">
+								    <img id="product_img2" src="{% if product.picture2 %}{{ product.picture2.url }}{% endif %}" alt="">
+							    </div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Photo{% endblocktrans %} 3</label>
+								{% if product.picture3 %}
+									<a class="img-clear" href="javascript:void(0);" data-id="3"><span ><i class="fas fa-trash-alt"></i></span></a>
+								{% endif %}
+								<div class="product-img-div" id="prod_img3">
+								    <img id="product_img3" src="{% if product.picture3 %}{{ product.picture3.url }}{% endif %}" alt="">
+							    </div>
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Photo{% endblocktrans %} 4</label>
+								{% if product.picture4 %}
+									<a class="img-clear" href="javascript:void(0);" data-id="4"><span ><i class="fas fa-trash-alt"></i></span></a>
+								{% endif %}
+								<div class="product-img-div" id="prod_img4">
+								    <img id="product_img4" src="{% if product.picture4 %}{{ product.picture4.url }}{% endif %}" alt="">
+							    </div>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Category{% endblocktrans %}</label>
+								<select class="selectpicker form-control" id="parent_cate" data-live-search="true" data-style="btn">
+									{% for cate in category %}
+										<option value="{{ cate.id }}">{{cate.name}}</option>
+									{% endfor %}
+								</select>
+							</div>
+							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12" id="sub_category"> 
+								<label>{% blocktrans %}Sub Category{% endblocktrans %}</label>
+								<select class="selectpicker form-control" id="child_cate" data-live-search="true" data-style="btn">
+									
+								</select>
+							</div>
+							<input type="hidden" name="category" id="category" value="{{ product.category.id }}">
+							<input type="hidden" name="language" id="language" value="{{ actual_lang }}">
+						</div>
+						<div class="row form-group">
+							<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Name{% endblocktrans %}</label>
+								<input type="text" class="form-control" name="name" id="name" required="" value="{{ product.name }}">
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Min. Order{% endblocktrans %}</label>
+								<input type="number" class="form-control" name="min_order" id="min_order" step="1" value="{% if product %}{{ product.min_order|safe }}{% else %}1{% endif %}">
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Price{% endblocktrans %}</label>
+								<input type="number" class="form-control" name="price" id="price" step="0.01" value="{{ product.price|safe }}">
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Ref{% endblocktrans %}</label>
+								<textarea class="form-control" name="reference" id="reference">{{ product.reference }}</textarea>
+							</div>
+						</div>
+						<div class="row form-group mt-3">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Characteristic{% endblocktrans %}</label>
+								<textarea class="form-control" name="description" id="description">{{ product.description }}</textarea>
+							</div>
+						</div>
+						<div class="row form-group">
+							<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+								<br>
+								<b class="btn btn-success" id="pdf_upload_btn" >{% blocktrans %}Upload PDF{% endblocktrans %}</b>
+								<label class="ml-2 uploaded_file_name">{% if product.pdf %}{{ product.filename}}{% endif %}</label>
+								{% if product.pdf %}
+									<a class="pdf-clear pl-2" href="javascript:void(0);" data-id="1"><span ><i class="fas fa-trash-alt"></i></span></a>
+								{% endif %}
+							</div>
+							<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+								<label>{% blocktrans %}Tag{% endblocktrans %}</label>
+								<input type="text" class="form-control" name="flag" id="flag" value="{{ product.flag|default_if_none:''}}">
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+								<div id="colorPicker"></div>
+								<label>{% blocktrans %}Tag Color{% endblocktrans %}</label><br>
+								<b class="btn_color btn {% if product %}{% if product.flagbackcolor == '' %}{{product.flagbackcolor}}{% else %}btn-danger{% endif %}{% else %}btn-danger{% endif %}" style="color:white;">{% blocktrans %}Choose Color{% endblocktrans %}</b>
+								<input type="hidden" name="flagbackcolor" id="flagcolor" value="{% if product %}{{product.flagbackcolor}}{% else %}#f62d51{% endif %}">
+							</div>
+							<div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+								<label>{% blocktrans %}Index Page{% endblocktrans %}</label>
+								<div class="onoffswitch">
+	                                <input type="checkbox" name="onoffswitch1" class="onoffswitch-checkbox" id="chk_index" {% if product.indexed %} checked {% endif %}>
+	                                <label class="onoffswitch-label" for="chk_index">
+	                                    <span class="onoffswitch-inner"></span>
+	                                    <span class="onoffswitch-switch"></span>
+	                                </label>
+	                            </div>
+	                            <input type="hidden" name="indexed" id="indexed" value="{{ product.indexed }}">
+	                        </div>
+						</div>
+						<div style="display: none;">
+                            <input type="file" id="img1" onchange="readURL1(this);" name="picture1">
+                            <input type="file" id="img2" onchange="readURL2(this);" name="picture2">
+                            <input type="file" id="img3" onchange="readURL3(this);" name="picture3">
+                            <input type="file" id="img4" onchange="readURL4(this);" name="picture4">
+                            <input type="file" id="pdf" onchange="readURL5(this);" name="pdf">
+                            <input type="hidden" id="exist1" name="exist1" value="{% if product.picture1 %}YES{% endif %}">
+                            <input type="hidden" id="exist2" name="exist2" value="{% if product.picture2 %}YES{% endif %}">
+                            <input type="hidden" id="exist3" name="exist3" value="{% if product.picture3 %}YES{% endif %}">
+                            <input type="hidden" id="exist4" name="exist4" value="{% if product.picture4 %}YES{% endif %}">
+                            <input type="hidden" id="existPDF" name="existPDF" value="{% if product.pdf %}YES{% endif %}">
+                        </div>
+						<div class="row">
+							<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center"> 
+								<button type="submit" id="btn_save" class="btn btn-primary mr-2">{% blocktrans %}Save{% endblocktrans %}</button>
+								<a href="{% url 'products' %}" id="btn_cancel" class="btn btn-light ml-2">{% blocktrans %}Cancel{% endblocktrans %}</a>
+							</div>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	CKEDITOR.replace( 'description',
+    {	
+    	extraPlugins: 'font, colorbutton, colordialog',
+        toolbar :
+        [
+            { name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
+            { name: 'basicstyles', items : [ 'Bold','Italic','Underline', 'Strike', 'Subscript', 'Superscript' ] },
+            { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+            { name: 'colors', items : [ 'TextColor','BGColor' ] },
+            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+            { name: 'insert', items: [ 'Image', 'Flash', 'Table' ] },
+        ]
+    });
+    CKEDITOR.replace( 'reference',
+    {	
+    	extraPlugins: 'font, colorbutton, colordialog',
+        toolbar :
+        [
+            { name: 'styles', items : [ 'Styles','Format','Font','FontSize' ] },
+            { name: 'basicstyles', items : [ 'Bold','Italic','Underline', 'Strike', 'Subscript', 'Superscript' ] },
+            { name: 'paragraph', items : [ 'NumberedList','BulletedList' ] },
+            { name: 'colors', items : [ 'TextColor','BGColor' ] },
+            { name: 'links', items: [ 'Link', 'Unlink', 'Anchor' ] },
+            { name: 'insert', items: [ 'Image', 'Flash', 'Table' ] },
+        ]
+    }); 
+	$(".selectpicker").selectpicker();
+	$("#parent_cate").val('{% if product.category.parent%}{{ product.category.parent.id }}{% else %}{{ product.category.id }}{% endif %}');
+	$("#parent_cate").selectpicker('refresh');
+	$("#parent_cate").on('change', function(){
+		$("#category").val($("#parent_cate").val());
+		getChildCategory($("#parent_cate").val());
+	});
+	getChildCategory($("#parent_cate").val());
+	$("#chk_index").on('change', function(){
+		if($(this).prop('checked')){
+			$("#indexed").val('True');
+		}else{
+			$("#indexed").val('False');
+		}
+	});
+	function getChildCategory(parent_id){
+		$.ajax({
+			headers: { "X-CSRFToken": '{{csrf_token}}' },
+			url: '{% url "ajax-get-subcategory" %}',
+			data: {
+				'cate_id': parent_id,
+			},
+			type: 'POST',
+			success: function (data) {
+				if(data.category.length ==0){
+					$("#sub_category").hide();
+				}else{
+					var sub_cate_html = "";
+					for(var i=0; i< data.category.length; i++){
+						sub_cate_html += '<option value="'+ data.category[i]["id"] +'">'+ data.category[i]["name"]+'</option>';
+					}
+					$("#child_cate").html(sub_cate_html);
+					$("#child_cate").val('{% if not product.category.parent%}{{ product.category.id }}{% endif %}');
+					$("#child_cate").selectpicker('refresh');
+					$("#sub_category").show();
+					$("#category").val($("#child_cate").val());
+				}
+			}
+		});
+	}
+	$(".btn_color").on('click', function(){
+		var colorpicker = new Picker({
+		    parent: document.querySelector('#colorPicker'),
+		    color: '#f62d51ff',
+		    onChange: function(color){
+		    	var rgba = color._rgba;
+		    	if (rgba != null){
+		    		var hex = rgbToHex(rgba[0], rgba[1], rgba[2], rgba[3]);
+		    		$(".btn_color").removeClass('btn-danger');
+		    		$(".btn_color").css('background-color', hex);
+		    		$("#flagcolor").val(hex);
+		    	}
+		    	
+		    },
+		});
+		colorpicker.show();
+	});
+	$(".img-clear").on('click', function(){
+		var imgTarget = "#product_img" + $(this).data('id');
+		$(imgTarget).attr('src', '');
+		var fileUploadTarget = "#img" + $(this).data('id');
+		$(fileUploadTarget).empty();
+		var existTarget = "#exist" + $(this).data('id');
+		$(existTarget).val('NO'); 
+	});
+	$(".pdf-clear").on('click', function(){
+		$('.uploaded_file_name').html("");
+		$("#pdf").empty();
+		$("#existPDF").val('NO');
+	});
+	function componentToHex(c) {
+	  	var hex = (c | 1 << 8).toString(16).slice(1);
+	  	return hex.length == 1 ? "0" + hex : hex;
+	}
+
+	function rgbToHex(r, g, b, a) {
+		a = ((a * 255) | 1 << 8).toString(16).slice(1)
+	  	return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b) + a;
+	}
+	$("#prod_img1").on('click', function(){
+		$("#img1").click();
+	});
+	$("#prod_img2").on('click', function(){
+		$("#img2").click();
+	});
+	$("#prod_img3").on('click', function(){
+		$("#img3").click();
+	});
+	$("#prod_img4").on('click', function(){
+		$("#img4").click();
+	});
+	$("#pdf_upload_btn").on('click', function(){
+		$("#pdf").click();
+	});
+	function readURL1(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#product_img1')
+                    .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function readURL2(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#product_img2')
+                    .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function readURL3(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#product_img3')
+                    .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function readURL4(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (e) {
+                $('#product_img4')
+                    .attr('src', e.target.result);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+    function readURL5(input) {
+        if (input.files && input.files[0]) {
+        	$('.uploaded_file_name').html(input.files[0].name);
+        }
+    }
+    
+</script>
+{% endblock %}

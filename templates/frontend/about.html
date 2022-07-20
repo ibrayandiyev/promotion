@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}
+	{% blocktrans %}About Us{% endblocktrans %} | {% blocktrans %}Consumable{% endblocktrans %}
+{% endblock %}
+{% block content %}
+<link href="{% static 'css/app.css' %}" rel="stylesheet">
+<div class="block-header row m-0 pb-2">
+	<div class="col-12 col-md-3">
+		<h2 class="pb-0 mb-0">{% blocktrans %}About Us{% endblocktrans %}</h2>
+	</div>
+</div>
+<div class="row clearfix m-0">
+	<div class="card col-12 p-4">
+		{% for item in about %}
+			<div>{{ item.description|safe }}</div>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}

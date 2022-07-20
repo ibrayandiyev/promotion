@@ -1,0 +1,86 @@
+{% extends 'base_admin.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% block content %}
+    <div class="row clearfix">
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="card-body">
+                    <center class="m-t-30">
+                        {% if user.picture %}
+                            <img src="{{user.picture.url}}" class="img-circle" alt="" style="width: 250px;height: 250px;" id="img_profile"/>
+                        {% else %}
+                            <img src="{% static 'images/avatar-default.jpg' %}" class="img-circle" style="width: 250px;height: 250px;" id="img_profile">
+                        {% endif %}
+                        <h4 class="card-title m-t-10">{{user.username}}</h4>
+                        <h6 class="card-subtitle">{% if user.is_staff == True %}Admin{% else %}User{% endif %}</h6>
+                    </center>
+                        
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="card">
+                <div class="card-header">
+                    <h2>{% blocktrans %}My Profile{% endblocktrans %}</h2>
+                </div>
+                <form action="." id="personal" method="post" target="_parent" enctype='multipart/form-data' class="form-horizontal form-material">
+                    {% csrf_token %}
+                    <div class="card-body" style="padding: 20px 60px">
+                        <div class="list-unstyled row clearfix">
+                            <div class="col-lg-12">
+                                <div class="form-group row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+                                        <label>{% blocktrans %}First Name{% endblocktrans %}</label>
+                                        {{form.first_name}}
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+                                        <label>{% blocktrans %}Last Name{% endblocktrans %}</label>
+                                        {{form.last_name}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                        <label>{% blocktrans %}Email{% endblocktrans %}</label>
+                                        {{form.email}}
+                                    </div>
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                        <label>{% blocktrans %}User Name{% endblocktrans %}</label><br>
+                                        {{form.username}}
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12"> 
+                                        <label>{% blocktrans %}Phone{% endblocktrans %}</label>
+                                        {{form.telephone}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="custom-file" style="display: none;">
+                                <input type="file" class="custom-file-input" id="imagen" onchange="readURL(this);" name="picture">      
+                            </div>
+                        </div>
+                    </div>                 
+                <div class="col-12" style="text-align: center; padding-bottom: 50px;">    
+                    <button type="submit" class="btn btn-primary waves-effect">{% blocktrans %}Save{% endblocktrans %}</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $("#img_profile").on('click', function(){
+            $("#imagen").click();
+        })
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    $('#img_profile')
+                        .attr('src', e.target.result);
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
+{% endblock %}

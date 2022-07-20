@@ -1,0 +1,184 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}
+	{{ product.name }} | {% blocktrans %}Consumable{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+<link href="{% static 'css/app.css' %}" rel="stylesheet">
+<div class="block-header row m-0 pb-2">
+	<div class="col-6 col-md-3">
+		<h2>{% blocktrans %}Product{% endblocktrans %}</h2>
+	</div>
+	<div class="d-flex mr-auto">
+		<ul class="category-view pl-0">
+			<li class="nav-item dropdown">
+		        <a class="nav-link" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+		        	<span class="pb-4">{% blocktrans %}All Category{% endblocktrans %}</span><i class="fas fa-angle-right ml-4"></i>
+		        </a>
+		        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+		        	{% for cate in category %}
+		        		{% if not cate.child %}
+		            		<li><a class="dropdown-item" href="{% url 'categories' cate.name.split|join:'-' cate.id %}">{{ cate.name }}</a></li>
+		            	{% else %}
+		            		<li class="dropdown-submenu"><a class="dropdown-item dropdown-toggle" href="javascript:void(0);">{{ cate.name }}</a>
+				                {% if cate.child.count >= 1 %}
+					                <ul class="dropdown-menu">
+					                	{% for child in cate.child %}
+					                    	<li><a class="dropdown-item" href="{% url 'subcategories' cate.name.split|join:'-' child.name.split|join:'-' child.id %}">{{ child.name }}</a></li>
+					                    {% endfor %}
+					                </ul>
+				                {% endif %}
+				            </li>
+		            	{% endif %}
+		            {% endfor %}
+		        </ul>
+		    </li>
+		</ul>
+
+		{% if selected_cate.parent %}
+			<ul class="category-view pl-0">
+				<li class="nav-item dropdown">
+			        <a class="nav-link" href="" id="navbarDropdownMenuLink1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+			        	<span class="pb-4">{{ selected_cate.parent.name }}</span>
+			        </a>
+			        {% if selected_cate.parent.child.count >= 1 %}
+				        <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink1">
+				        	{% for cate in selected_cate.parent.child %}
+				        		<li><a class="dropdown-item" href="{% url 'subcategories' selected_cate.parent.name.split|join:'-' cate.name.split|join:'-' cate.id %}">{{ cate.name }}</a></li>
+				            {% endfor %}
+				        </ul>
+			        {% endif %}
+			    </li>
+			</ul>
+			<a class="nav-link" href="{% url 'subcategories' selected_cate.parent.name.split|join:'-' selected_cate.name.split|join:'-' selected_cate.id %}">
+	        	<i class="fas fa-angle-right mr-4"></i>{{ selected_cate.name }}
+	        </a>
+		{% else %}
+			<a class="nav-link" >
+	        	<span class="pb-4">{{ selected_cate.name }}</span>
+	        </a>
+		{% endif %}
+	</div>
+	<div class="col-5 col-md-1">
+		
+	</div>
+	
+</div>
+<div class="card p-3">
+	<div class="row">
+		<div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+			<div class="detail-img-div col-12">
+				{% if product.picture1 %}
+					<img src="{{ product.picture1.url }}" alt="" class="pri_img">
+				{% elif product.picture2 %}
+					<img src="{{ product.picture2.url }}" alt="" class="pri_img">
+				{% elif product.picture3 %}
+					<img src="{{ product.picture3.url }}" alt="" class="pri_img">
+				{% elif product.picture4 %}
+					<img src="{{ product.picture4.url }}" alt="" class="pri_img">
+				{% endif %}
+
+			</div>
+			<div class="col-12 row">
+				{% if product.picture1 %}
+					<div class="col-3">
+						<div class="card list-img-card">
+							<img class="active" src="{{ product.picture1.url }}" alt="">
+						</div>
+					</div>
+				{% endif %}
+				{% if product.picture2 %}
+					<div class="col-3">
+						<div class="card list-img-card">
+							<img src="{{ product.picture2.url }}" alt="">
+						</div>
+					</div>
+				{% endif %}
+				{% if product.picture3 %}
+					<div class="col-3">
+						<div class="card list-img-card">
+							<img src="{{ product.picture3.url }}" alt="">
+						</div>
+					</div>
+				{% endif %}
+				{% if product.picture4 %}
+					<div class="col-3">
+						<div class="card list-img-card">
+							<img src="{{ product.picture4.url }}" alt="">
+						</div>
+					</div>
+				{% endif %}
+			</div>
+		</div>
+		<div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+			<div class="col-12 mb-3" style="border-bottom: 1px solid #c4dfea;">
+				<h2 class="m-0">{{ product.name }}</h2>
+			</div>
+			<div class="col-12 mb-2" style="border-bottom: 1px solid #c4dfea;">
+				<h4 class="m-0">Ref</h4>
+				<div class="col-12 pl-3 pr-3 pt-2 pb-4" style="min-height: 100px;">
+					{{ product.reference|safe }}
+				</div>
+			</div>
+			<div class="row mb-3" style="align-items: center">
+				<div class="col-6 pt-3 text-center">
+					{% if product.price %}
+						<span style="font-size: 24px; font-weight: 700;"> {{ product.price }}‎ € </span>
+					{% endif %}
+				</div>
+				<div class="col-3">
+					<label class="m-0" style="font-size: 90%" for="quantity">{% blocktrans %}Quantity{% endblocktrans %}</label>
+					<input type="number" style="font-size: 90%" class="form-control" name="quantity" id="quantity" required="" value="{{ product.min_order }}" min="{{ product.min_order }}">
+				</div>
+				<div class="col-3">
+					<label class="m-0" style="font-size: 90%">{% blocktrans %}Contact{% endblocktrans %}</label>
+					<b id="btn_send" style="background-color: #c4dfea;" class="btn pr-4 pl-4"><i style="font-size: 1.4em;" class="fas fa-shopping-cart"></i></b>
+				</div>
+			</div>
+			<div class="col-12 form-group">
+				{% if product.flag %}
+				<div class="text-center p-1" style="background-color:{% if product.flagbackcolor %}{{product.flagbackcolor}}{% else %} #f62d51{% endif %};">
+					<span class="text-white" style="font-weight: 600;font-size: 1.25rem;">{{product.flag}}</span>
+				</div>
+				{% endif %}	
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-12 pl-4 pr-4">
+			<h2 class="mb-0 ml-2 mr-2" style="border-bottom: 1px solid #c4dfea;">{% blocktrans %}Characteristics{% endblocktrans %}</h2>
+		</div>
+		<div class="col-12 pl-4 pr-4">
+			<div class="ml-3 mr-3 mt-2" style="min-height: 120px;">
+				{{ product.description|safe }}
+			</div>
+		</div>
+		{% if product.pdf %}
+		<div class="col-12 pl-4 pr-4">
+			<div class="ml-3 mr-3 mt-2">
+				<a href="{{ product.pdf.url}}" download>
+					<i class="fas fa-file-download"></i>
+					<span class="pl-2">{{ product.filename}}</span>
+				</a>
+			</div>
+		</div>
+		{% endif %}
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(".list-img-card img").on('click', function(){
+		$(".list-img-card img").each(function() {
+		  $( this ).removeClass( "active" );
+		});
+		$(this).addClass('active');
+		$(".pri_img").attr('src', $(this).attr('src'));
+	})
+	$("#btn_send").on('click', function(){
+		var url = "{% url 'product-contact-us' product.id  100 %}".replace('100', $("#quantity").val());
+		location.href = url;
+	});
+</script>
+{% endblock %}

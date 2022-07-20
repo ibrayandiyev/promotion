@@ -1,0 +1,80 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" sizes="16x16" href="#">
+    <title>Consumable Admin</title>
+    <!-- Bootstrap Core CSS -->
+    <link href="{% static 'css/bootstrap/bootstrap.css' %}" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" />
+        </svg>
+    </div>
+    <section id="wrapper">
+        <div class="login-register" style="background-color: #56cbfb;">   
+            <div class="text-center">
+                <b style="font-size: 2.5em;color:white;">Consumable Admin</b>
+            </div>     
+            <div class="login-box card">
+                <div class="card-body">
+                    <form id="sign_in" method="POST">
+                        {% csrf_token %}
+                        <div class="form-group" style="text-align: center;">
+                            <img src="{% static 'images/logo.png' %}" draggable="false" width="100" height="auto">
+                        </div>
+                        <div class="form-group ">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="text" required="" id="id_username" name="username" placeholder="Username">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <input class="form-control" type="password" required="" id="id_password"  name="password" placeholder="Password"> 
+                            </div>
+                        </div>
+                        <div class="form-group text-center m-t-20">
+                            <div class="col-xs-12">
+                                <button class="btn btn-info btn-block text-uppercase waves-effect waves-light" type="submit">Log In</button>
+                            </div>
+                        </div>
+                        <div class="form-group text-center m-t-20 mb-2">
+                            <a href="{% url 'index' %}" class="btn btn-info btn-rounded waves-effect waves-light">Back to home</a>
+                        </div>
+                    </form>
+                </div>
+          </div>
+        </div>
+        
+    </section>
+    
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{% static 'js/bootstrap/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+    
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{% static 'js/jquery.slimscroll.js' %}"></script>
+    <script src="{% static 'js/waves.js' %}"></script>
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/sticky-kit.min.js' %}"></script>
+
+    <script src="{% static 'js/custom.min.js' %}"></script>
+    
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+{% extends 'base_admin.html' %}
+{% load staticfiles %}
+{% load i18n %}
+
+{% block content %}
+<link href="{% static 'css/jquery-nestable.css' %}" rel="stylesheet">
+<link href="{% static 'css/app.css' %}" rel="stylesheet">
+<script src="{% static 'js/jquery.nestable.js' %}"></script>
+
+<div class="block-header">
+	<h2>{% blocktrans %}Dashboard{% endblocktrans %}</h2>
+</div>
+<div class="row clearfix">
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+		<div class="card">
+			<div class="card-header">
+				<h2 id="head_title">{% blocktrans %}Index Products{% endblocktrans %}</h2>
+			</div>
+			<div class="card-body">
+				<div class="clearfix m-b-20">
+					<div class="dd nestable-with-handle product">
+						<ol class="dd-list">
+							{% for product in products %}
+								<li class="dd-item dd3-item" data-id="{{ product.id }}">
+	                                <div class="dd-handle dd3-handle"></div>
+	                                <div class="dd3-content">
+	                                	<div class="row m-0">
+	                                		<div class="mr-auto pl-4">
+	                                			<h2  class="text-primary" >{{ product.name }}</h2>
+	                                		</div>
+	                                		<div class="col-lg-2 col-md-2 col-sm-6 col-xs-6">
+												<div class="onoffswitch">
+					                                <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" data-id="{{ product.id }}" id="chk_index{{product.id}}" {% if product.indexed %} checked {% endif %}>
+					                                <label class="onoffswitch-label" for="chk_index{{product.id}}">
+					                                    <span class="onoffswitch-inner"></span>
+					                                    <span class="onoffswitch-switch"></span>
+					                                </label>
+					                            </div>
+					                        </div>
+	                                	</div>
+	                                	<div class="row pl-2 pr-4">
+	                                		<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+												<div class="product-img-div" id="prod_img1">
+												    <img id="product_img1" src="{% if product.picture1 %}{{ product.picture1.url }}{% endif %}" alt="">
+											    </div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+												<div class="product-img-div" id="prod_img2">
+												    <img id="product_img2" src="{% if product.picture2 %}{{ product.picture2.url }}{% endif %}" alt="">
+											    </div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+												<div class="product-img-div" id="prod_img3">
+												    <img id="product_img3" src="{% if product.picture3 %}{{ product.picture3.url }}{% endif %}" alt="">
+											    </div>
+											</div>
+											<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12"> 
+												<div class="product-img-div" id="prod_img4">
+												    <img id="product_img4" src="{% if product.picture4 %}{{ product.picture4.url }}{% endif %}" alt="">
+											    </div>
+											</div>
+		                                </div>
+	                                </div>
+	                            </li>
+                            {% endfor %}
+						</ol>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+		<div class="card">
+			<div class="card-header">
+				<h2>{% blocktrans %}Category Structure{% endblocktrans %}</h2>
+			</div>
+			<div class="card-body">
+				<div class="clearfix m-b-20">
+					<div class="dd category">
+                        <ol class="dd-list">
+                        	{% for cate in category %}
+	                            <li class="dd-item" data-id="{{ cate.id }}">
+	                                <div class="dd-handle drag_disabled">
+	                                	<div class="row m-0">
+		                                	<div class="mr-auto">
+		                                		{{ cate.name }}
+		                                	</div>
+		                                	<div class="d-flex">
+		                                		<span class="text-danger">{{ cate.product_count }}</span>
+		                                	</div>
+		                                </div>
+	                                </div>
+	                                {% if cate.child %}
+	                                	<ol class="dd-list">
+	                                		{% for child in cate.child %}
+			                                    <li class="dd-item" data-id="{{ child.id }}">
+			                                        <div class="dd-handle drag_disabled">
+			                                        	<div class="row m-0">
+						                                	<div class="mr-auto">
+						                                		{{ child.name }}
+						                                	</div>
+						                                	<div class="d-flex">
+						                                		<span class="font-weight-normal">{{ child.product_count }}</span>
+						                                	</div>
+						                                </div>
+			                                    	</div>
+			                                    </li>
+			                                {% endfor %}
+			                            </ol>
+		                            {% endif %}
+	                            </li>
+	                        {% endfor %}
+                        </ol>
+                    </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+</div>
+<script type="text/javascript">
+	$(".category").nestable({
+        maxDepth: 2,
+    });
+    $(".product").nestable({
+        maxDepth: 1,
+    });
+    var orgSerilizedData = JSON.stringify($(".product").nestable('serialize'));
+	$('.product').on('change', function () {
+        var $this = $(this);
+        var serializedData = JSON.stringify($($this).nestable('serialize'));
+        console.log(serializedData);
+        if(orgSerilizedData != serializedData){
+        	orgSerilizedData = serializedData;
+        	$.ajax({
+				headers: { "X-CSRFToken": '{{csrf_token}}' },
+				url: '{% url "ajax-order-index-product" %}',
+				data: {
+					'new_order': serializedData,
+				},
+				type: 'POST',
+				success: function (data) {
+					
+				}
+			});
+        }
+    });
+    $('.onoffswitch-checkbox').on('change', function(){
+    	if(!$(this).prop('checked')){
+    		$.ajax({
+				headers: { "X-CSRFToken": '{{csrf_token}}' },
+				url: '{% url "ajax-remove-index-product" %}',
+				data: {
+					'prod_id': $(this).data('id'),
+				},
+				type: 'POST',
+				success: function (data) {
+					location.reload();
+				}
+			});
+    	}
+    })
+</script>
+{% endblock %}

@@ -1,0 +1,158 @@
+{% load staticfiles %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Consumibles">
+    <meta name="author" content="Patrick">
+    <title>{% block title %}{% blocktrans %}Consumable{% endblocktrans %}{% endblock %}</title>
+    <link href="{% static 'css/bootstrap/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/flag-icon-css/flag-icon.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style_front.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{% static 'js/bootstrap/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+    
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{% static 'js/jquery.slimscroll.js' %}"></script>
+    <script src="{% static 'js/waves.js' %}"></script>
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/sticky-kit.min.js' %}"></script>
+    
+    
+</head>
+
+<body>
+    <section id="topbar" class="d-none d-lg-block">
+        <div class="container clearfix">
+            <div class="contact-info float-left">
+                <i class="fas fa-envelope"></i><a href="mailto:behmpat@behmpat.com">behmpat@behmpat.com</a>
+                <i class="fas fa-phone"></i> +34 916 332 271
+            </div>
+            <div class="social-links float-right">
+                <a href="{% url 'admin-index' %}" ><i class="fas fa-user"></i></a>
+                <!-- <a href="https://twitter.com/" class="twitter"><i class="fab fa-twitter"></i></a>
+                <a href="https://facebook.com/" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                <a href="https://instagram.com/" class="instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://skype.com/" class="skype"><i class="fab fa-skype"></i></a>
+                <a href="https://linkedin.com/" class="linkedin"><i class="fab fa-linkedin"></i></a> -->
+            </div>
+        </div>
+    </section>
+    <header id="header">
+        <div class="container">
+
+            <div class="logo float-left">
+                <h1 class="text-light"><a href="{% url 'index' %}"><span>{% blocktrans %}Consumable{% endblocktrans %}</span></a></h1>
+            </div>
+            <ul class="navbar-nav my-lg-0 pr-md-4 ml-md-4 float-right" style="margin-right: 40px;">
+                <li class="nav-item dropdown">
+                    <b id="selected_lang" class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-lang="{{LANGUAGE_CODE}}"> 
+                        <i class="flag-icon flag-icon-{% if LANGUAGE_CODE == 'en' %}us{% else %}es{% endif %}"></i> {% if LANGUAGE_CODE == 'en' %} {% blocktrans %}English{% endblocktrans %} {% else %} {% blocktrans %}Spain{% endblocktrans %} {% endif %}
+                    </b>
+                    <div class="dropdown-menu  dropdown-menu-right animated bounceInDown"> 
+                        <b class="dropdown-item item_lang" href="#" data-lang="es"><i class="flag-icon flag-icon-es"></i> {% blocktrans %}Spain{% endblocktrans %}</b>
+                        <b class="dropdown-item item_lang" href="#" data-lang="en"><i class="flag-icon flag-icon-us"></i> {% blocktrans %}English{% endblocktrans %}</b> 
+                    </div>
+                    <form id="langForm" action="{% url 'set_language' %}" method="POST">
+                        {% csrf_token %}
+                        <input name="next" type="hidden" value="{{ redirect_to }}" />
+                        <input name="language" id="val_lang" type="hidden" value="es" />
+                    </form>
+                </li>
+            </ul>
+            <nav class="nav-menu float-right d-none d-lg-block">
+                <ul>
+                    <li class="{% if 'categories' in request.path or 'product' in request.path %}active{% endif %}"><a href="{% url 'index' %}">{% blocktrans %}Product{% endblocktrans %}</a></li>
+                    <li class="{% if 'about-us' in request.path %}active{% endif %}"><a href="{% url 'about-us' %}">{% blocktrans %}About Us{% endblocktrans %}</a></li>
+                    <li class="{% if 'contact-us' in request.path %}active{% endif %}"><a href="{% url 'contact-us' %}">{% blocktrans %}Contact Us{% endblocktrans %}</a></li>
+                </ul>
+
+            </nav><!-- .nav-menu -->
+
+            
+            
+        </div>
+    </header>
+
+    <div id="main-wrapper">
+        <div class="page-wrapper" style="margin-left: 0px;background-color: #c4dfea;">
+            <div class="container-fluid" style="background-color: #c4dfea;">
+                <div class="container">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ======= Footer ======= -->
+    <footer id="footer">
+        <div class="footer-top">
+          <div class="container">
+            <div class="row" style="align-items: center;">
+
+              <div class="col-lg-3 col-6 footer-info text-center">
+                <p>
+                    <strong>Phone:</strong> +34 916 332 271<br>
+                </p>
+                
+              </div>
+              <div class="col-lg-3 col-6 footer-info text-center">
+                <p>
+                    <strong>Email:</strong> behmpat@behmpat.com<br>
+                </p>
+                
+              </div>
+              <div class="col-lg-2 col-4 footer-links text-center p-0">
+                <a href="{% url 'index' %}">{% blocktrans %}Product{% endblocktrans %}</a>
+              </div>
+
+              <div class="col-lg-2 col-4 footer-links text-center p-0">
+                <a href="{% url 'about-us' %}">{% blocktrans %}About Us{% endblocktrans %}</a>
+              </div>
+
+              <div class="col-lg-2 col-4 footer-links text-center p-0">
+                <a href="{% url 'contact-us' %}">{% blocktrans %}Contact Us{% endblocktrans %}</a>
+              </div>
+              <!-- <div class="col-lg-3 col-12 footer-links text-center">
+                <div class="social-links">
+                    <a href="https://twitter.com/" class="twitter"><i class="fab fa-twitter"></i></a>
+                    <a href="https://facebook.com/" class="facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://instagram.com/" class="instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://skype.com/" class="skype"><i class="fab fa-skype"></i></a>
+                    <a href="https://linkedin.com/" class="linkedin"><i class="fab fa-linkedin"></i></a>
+                </div>
+              </div> -->
+
+            </div>
+          </div>
+        </div>
+
+    </footer><!-- End Footer -->
+<script type="text/javascript">
+    $(".item_lang").on('click', function(){
+        $("#selected_lang").html($(this).html());
+        $("#selected_lang").data('lang', $(this).data('lang'));
+        $("#val_lang").val($(this).data('lang'));
+        $("#langForm").submit();
+    });
+</script> 
+<script src="{% static 'js/jquery.sticky.js' %}"></script>
+<script src="{% static 'js/custom.min.js' %}"></script>
+<script src="{% static 'js/main.js' %}"></script>   
+</body>
+
+</html>

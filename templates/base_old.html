@@ -1,0 +1,117 @@
+{% load staticfiles %}
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_available_languages as LANGUAGES %}
+{% get_language_info_list for LANGUAGES as languages %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Consumibles">
+    <meta name="author" content="Patrick">
+    <title>{% block title %}{% blocktrans %}Promotion{% endblocktrans %}{% endblock %}</title>
+    <link href="{% static 'css/bootstrap/bootstrap.css' %}" rel="stylesheet">
+    <link href="{% static 'css/flag-icon-css/flag-icon.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    <!-- All Jquery -->
+    <!-- ============================================================== -->
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <!-- Bootstrap tether Core JavaScript -->
+    <script src="{% static 'js/bootstrap/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap/bootstrap.min.js' %}"></script>
+    
+    <!-- slimscrollbar scrollbar JavaScript -->
+    <script src="{% static 'js/jquery.slimscroll.js' %}"></script>
+    <script src="{% static 'js/waves.js' %}"></script>
+    <script src="{% static 'js/sidebarmenu.js' %}"></script>
+    <script src="{% static 'js/sticky-kit.min.js' %}"></script>
+
+    <script src="{% static 'js/custom.min.js' %}"></script>
+</head>
+
+<body class="fix-header fix-sidebar card-no-border">
+    <div class="preloader">
+        <svg class="circular" viewBox="25 25 50 50">
+            <circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10" /> 
+        </svg>
+    </div>
+    <div id="main-wrapper">
+        <header class="topbar">
+            <nav class="navbar top-navbar navbar-expand-md navbar-light" style="background-color: #56cbfb;">
+                <div class="navbar-header" style="background-color: #51bae4;">
+                    <a class="navbar-brand" href="{% url 'index' %}">
+                        <b>
+                            <img style="max-width: 60px;max-height: 60px;" draggable="false" src="{% static 'images/header_logo.png'%}" title="{% blocktrans %}Promotion{% endblocktrans %}">
+                        </b>
+                        <span class="text-white">
+                            &nbsp;&nbsp;&nbsp;{% blocktrans %}Promotion{% endblocktrans %}
+                        </span>
+                    </a>
+                </div>
+                <div class="navbar-collapse" >
+                    <ul class="navbar-nav mr-auto mt-md-0 ">
+                        <li class="nav-item"> 
+                            <a class="nav-link nav-toggler hidden-md-up text-muted waves-effect waves-dark" href="javascript:void(0)">
+                                <i class="fa fa-bars nav_bar"></i>
+                            </a> 
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav my-lg-0 pr-md-4">
+                        <li class="nav-item dropdown">
+                            <b id="selected_lang" class="nav-link dropdown-toggle waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-lang="{{LANGUAGE_CODE}}"> 
+                                <i class="flag-icon flag-icon-{% if LANGUAGE_CODE == 'en' %}us{% else %}es{% endif %}"></i> {% if LANGUAGE_CODE == 'en' %} {% blocktrans %}English{% endblocktrans %} {% else %} {% blocktrans %}Spain{% endblocktrans %} {% endif %}
+                            </b>
+                            <div class="dropdown-menu  dropdown-menu-right animated bounceInDown"> 
+                                <b class="dropdown-item item_lang" href="#" data-lang="es"><i class="flag-icon flag-icon-es"></i> {% blocktrans %}Spain{% endblocktrans %}</b>
+                                <b class="dropdown-item item_lang" href="#" data-lang="en"><i class="flag-icon flag-icon-us"></i> {% blocktrans %}English{% endblocktrans %}</b> 
+                            </div>
+                            <form id="langForm" action="{% url 'set_language' %}" method="POST">
+                                {% csrf_token %}
+                                <input name="next" type="hidden" value="{{ redirect_to }}" />
+                                <input name="language" id="val_lang" type="hidden" value="es" />
+                            </form>
+                        </li>
+                    </ul>
+                    <ul>
+                        <a class="navbar-brand" href="{% url 'login' %}">Admin</a>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div class="page-wrapper" style="margin-left: 0px;background-color: #c4dfea;">
+            <div class="container-fluid" style="background-color: #c4dfea;">
+                <div class="container">
+                    {% block content %}
+                    {% endblock %}
+                </div>
+            </div>
+            <footer class="footer" style="left:0">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                            <a href="{% url 'about-us' %}">About Us</a>
+                        </div>
+                        <div class="col-md-3 col-lg-3 col-sm-6 col-6">
+                            <a href="{% url 'contact-us' %}">Contact Us</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+<script type="text/javascript">
+    $(".item_lang").on('click', function(){
+        $("#selected_lang").html($(this).html());
+        $("#selected_lang").data('lang', $(this).data('lang'));
+        $("#val_lang").val($(this).data('lang'));
+        $("#langForm").submit();
+    });
+</script>    
+</body>
+
+</html>

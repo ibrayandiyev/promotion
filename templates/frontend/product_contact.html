@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% load i18n %}
+{% block title %}
+	{% blocktrans %}Contact Us{% endblocktrans %} | {% blocktrans %}Consumable{% endblocktrans %}
+{% endblock %}
+
+{% block content %}
+<div class="row clearfix m-0 ">
+	<div class="col-lg-8 offset-md-1 offset-lg-2 col-md-10 col-sm-12 col-12">
+		<div class="card col-12 p-4 mt-4">
+			<form method="POST">
+				{% csrf_token %}
+				<div class="clearfix m-b-20">
+					<div class="row form-group mt-2" style="text-align: center;">
+						<div class="col-12"> 
+							<h2>{% blocktrans %}HOW CAN WE HELP YOU?{% endblocktrans %}</h2>
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+							<label>{% blocktrans %}Name{% endblocktrans %}</label>
+							<input type="text" class="form-control" name="name" id="name" required="">
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+							<label>{% blocktrans %}Email{% endblocktrans %}</label>
+							<input type="email" class="form-control" name="email" id="email" required="">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+							<label>{% blocktrans %}Product{% endblocktrans %}</label>
+							<input type="text" class="form-control" name="product" id="product" required="" readonly="" value="{{ prod_name }}">
+						</div>
+						<div class="col-lg-6 col-md-6 col-sm-12 col-xs-12"> 
+							<label>{% blocktrans %}Quantity{% endblocktrans %}</label>
+							<input type="number" class="form-control" name="quantity" id="quantity" required="" value="{{ quantity }}" min="{{ min_order }}">
+						</div>
+					</div>
+					<div class="row form-group">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+							<label>{% blocktrans %}Message{% endblocktrans %}</label>
+							<textarea class="form-control" name="message" id="message" rows="5" required=""></textarea>
+						</div>
+					</div>
+					<div class="row">
+						<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 text-center"> 
+							<button type="submit" class="btn btn-primary mr-2">{% blocktrans %}Send{% endblocktrans %}</button>
+							<a href="{% url 'index' %}" class="btn btn-light ml-2">{% blocktrans %}Cancel{% endblocktrans %}</a>
+						</div>
+					</div>
+				</div>
+
+			</form>
+			
+		</div>
+	</div>
+</div>
+{% endblock %}
